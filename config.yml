@@ -1,0 +1,16 @@
+# The prefix shown before all messages. Set to 'none' to disable
+prefix: '&1[Broadcast5000]'
+
+# How many messages there will be. YOU MUST SET THIS FOR IT TO WORK
+how-many-messages: 3
+
+#Amount of time (in seconds) between messages
+message-delay: 600
+
+# Amount of time before the first message plays after startup
+start-message-delay: 300
+
+# These are your messages. To add more, just add a new number, and change it above
+1: '&4Message 1'
+2: '&6Message 2'
+3: '&0Message 3'

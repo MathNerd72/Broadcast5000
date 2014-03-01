@@ -1,0 +1,10 @@
+name: Broadcast5000
+main: com.yubacraft.Broadcast5000.Braoadcast5000
+version: 1.0
+
+commands:
+   bc:
+      description: Broadcast a message
+      usage: /<command> [number]
+      permission: broadcast5000.bc
+      permission-message: You don't have permission!
