@@ -15,9 +15,10 @@ public class Braoadcast5000 extends JavaPlugin{
 	public void onEnable(){
 		saveDefaultConfig();
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-		@SuppressWarnings("unused")
-		int delay = getConfig().getInt("message-delay") * 20;
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+			/**
+			 * Scheduler that broadcasts
+			 */
 			@Override
 			public void run(){
 				Random rand = new Random();
@@ -28,21 +29,85 @@ public class Braoadcast5000 extends JavaPlugin{
 		}, this.getConfig().getInt("start-message-delay") * 20, this.getConfig().getInt("message-delay") * 20);
 	}
 	
-	public void onDisable(){
-		//TODO Code for when the plugin is disabled
-	}
-	
+	/**
+	 * The universal method to chop up the config to a point where
+	 * it can broadcast a message
+	 * @param whichOne
+	 */
 	public void broadcast(int whichOne){
-		String header = this.getConfig().getString("prefix").replace('&', '�');
+		String header = this.getConfig().getString("prefix");
 		int i = whichOne;
 		String ii = Integer.toString(i);
-		String message = this.getConfig().getString(ii).replace('&', '�');
-		if (header == "none"){
-			Bukkit.getServer().broadcastMessage(message);
+		String message = this.getConfig().getString(ii).replace('&', '§');
+		// Check if the prefix is 'none'
+		if (header.equalsIgnoreCase("none")){
+			if (message.split("%new").length == 1){
+				Bukkit.getServer().broadcastMessage(message);
+				return;
+			}
+			else{
+				for (String message2 : message.split("%new")){
+					Bukkit.getServer().broadcastMessage(message2);
+				}
+				return;
+			}
 		}
-		Bukkit.getServer().broadcastMessage(header + " " + message);
+		//If the config isn't set to 'none'
+		else{
+			if (message.split("%new").length == 1){
+				Bukkit.getServer().broadcastMessage(header.replace('&', '§') + " " + message);
+				return;
+			}
+			else{
+				for (String message2 : message.split("%new")){
+					Bukkit.getServer().broadcastMessage(header.replace('&', '§') + " " + message2);
+				}
+				return;
+			}
+		}
 	}
 	
+	/**
+	 * Broadcast a message manually
+	 * @param message
+	 */
+	public void broadcastManual (String message){
+		String header = this.getConfig().getString("prefix");
+		String message2 = message.replace('&', '§');
+		// Check if the prefix is 'none'
+		if (header.equalsIgnoreCase("none")){
+			if (message.split("%new").length == 1){
+				Bukkit.getServer().broadcastMessage(message2);
+				return;
+			}
+			else{
+				for (String message3 : message.split("%new")){
+					Bukkit.getServer().broadcastMessage(message3);
+				}
+				return;
+			}
+		}
+		//If the config isn't set to 'none'
+		else{
+			if (message.split("%new").length == 1){
+				Bukkit.getServer().broadcastMessage(header.replace('&', '§') + " " + message2);
+				return;
+			}
+			else{
+				for (String message3 : message.split("%new")){
+					Bukkit.getServer().broadcastMessage(header.replace('&', '§') + " " + message3);
+				}
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * A method to see if a number is higher than the
+	 * highest broadcast number
+	 * @param i
+	 * @return
+	 */
 	public boolean tooHigh (int i){
 		if (i < this.getConfig().getInt("how-many-messages")){
 			return false;
@@ -52,6 +117,9 @@ public class Braoadcast5000 extends JavaPlugin{
 		}
 	}
 	
+	/**
+	 * Command to broadcast a pre-loaded message manually
+	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		if (cmd.getName().equalsIgnoreCase("bc")){
 			if (sender instanceof Player){
@@ -83,7 +151,39 @@ public class Braoadcast5000 extends JavaPlugin{
 					return true;
 				}
 			}
+			return false;
+		}
+		/**
+		 * Say direct command
+		 */
+		if (cmd.getName().equalsIgnoreCase("say")){
+			if (sender instanceof Player){
+				Player player = (Player) sender;
+				if (player.hasPermission("broadcast5000.say")){
+					if (args.length >= 1){
+						StringBuilder string = new StringBuilder();
+						for (int n = 0; n < args.length; n++){
+							string.append(args[n] + " ");
+						}
+						String message = string.toString();
+						broadcastManual(message);
+						return true;
+					}
+				}
+			}
+			else{
+				if (args.length >= 1){
+					StringBuilder string = new StringBuilder();
+					for (int n = 0; n < args.length; n++){
+						string.append(args[n] + " ");
+					}
+					String message = string.toString();
+					broadcastManual(message);
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 }
+
