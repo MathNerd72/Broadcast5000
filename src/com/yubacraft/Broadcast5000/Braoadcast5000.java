@@ -118,14 +118,23 @@ public class Braoadcast5000 extends JavaPlugin{
 	}
 	
 	/**
-	 * Command to broadcast a pre-loaded message manually
+	 * All Commands
 	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+		/**
+		 * Command to directly load a preloaded message
+		 */
 		if (cmd.getName().equalsIgnoreCase("bc")){
 			if (sender instanceof Player){
 				Player player = (Player) sender;
 				if (player.hasPermission("broadcast5000.bc")){
-					int i = Integer.parseInt(args[0]);
+					try {
+						Integer.parseInt(args[0]);
+					}
+					catch (NumberFormatException e){
+						return false;
+					}
+					int i = Integer.parseInt(args[0]);//TODO Check if it is an int first
 					int i2 = this.getConfig().getInt("how-many-messages");
 					if(i > 0 && 1 <= i2){
 						int i3 = Integer.parseInt(args[0]);
@@ -186,4 +195,3 @@ public class Braoadcast5000 extends JavaPlugin{
 		return false;
 	}
 }
-
